@@ -67,20 +67,21 @@ class CrosswordCreator():
         for i in range(self.crossword.height):
             for j in range(self.crossword.width):
 
-                rect = [
+                rect = (
                     (j * cell_size + cell_border,
                      i * cell_size + cell_border),
                     ((j + 1) * cell_size - cell_border,
                      (i + 1) * cell_size - cell_border)
-                ]
+                )
                 if self.crossword.structure[i][j]:
                     draw.rectangle(rect, fill="white")
-                    if letters[i][j]:
-                        _, _, w, h = draw.textbbox((0, 0), letters[i][j], font=font)
+                    letter = letters[i][j]
+                    if letter is not None:
+                        _, _, w, h = draw.textbbox((0, 0), letter, font=font)
                         draw.text(
                             (rect[0][0] + ((interior_size - w) / 2),
                              rect[0][1] + ((interior_size - h) / 2) - 10),
-                            letters[i][j], fill="black", font=font
+                            letter, fill="black", font=font
                         )
 
         img.save(filename)
@@ -206,7 +207,7 @@ class CrosswordCreator():
                         if value[overlap[0]] != value2[overlap[1]]:
                             values_penalty[value] += 1
 
-        return sorted([value in self.domains[var]], key= lambda item: values_penalty[item])
+        return sorted(self.domains[var], key=lambda item: values_penalty[item])
 
     def select_unassigned_variable(self, assignment):
         """

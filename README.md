@@ -1,6 +1,116 @@
-# Generating Crossword Puzzles
+# Crossword Puzzle Generator
 
-This project aims to generate a crossword puzzle given a crossword structure and a list of words to use. The problem is modeled as a constraint satisfaction problem, where each sequence of squares represents a variable, and we need to find an appropriate word from the domain of possible words to fill in each variable. The solution uses a combination of node consistency, arc consistency, and backtracking search to find a satisfying assignment that meets all the constraints.
+This project generates crossword puzzles automatically using constraint satisfaction problem (CSP) algorithms. Given a crossword structure and a list of words, it finds a valid solution that satisfies all constraints using node consistency, arc consistency, and backtracking search.
+
+## Features
+
+- **Automatic Crossword Generation**: Creates complete crossword puzzles from structure files and word lists
+- **CSP Algorithms**: Implements advanced constraint satisfaction techniques
+- **Multiple Output Formats**: Text output and image generation (PNG)
+- **Flexible Input**: Customizable crossword structures and word lists
+- **Example Data**: Includes sample structures and word lists to get started
+
+## Project Structure
+
+```
+Crossword/
+├── crossword.py          # Core data structures (Variable, Crossword classes)
+├── generate.py           # CSP solving algorithms and main logic
+├── example.py            # Example usage script
+├── requirements.txt      # Python dependencies
+├── data/
+│   ├── structures/       # Crossword layout files (.txt)
+│   └── words/           # Word list files (.txt)
+└── assets/
+    └── fonts/           # Font files for image generation
+```
+
+## Quick Start
+
+### Installation
+
+1. Clone or download this repository
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+### Running Examples
+
+The easiest way to get started is to run the example script:
+
+```bash
+python example.py
+```
+
+This will generate two example crosswords using the provided data files.
+
+### Command Line Usage
+
+You can also use the generator directly from the command line:
+
+```bash
+# Basic usage
+python generate.py data/structures/0.txt data/words/words0.txt
+
+# Save to image file
+python generate.py data/structures/0.txt data/words/words0.txt output.png
+```
+
+### Programmatic Usage
+
+```python
+from crossword import Crossword
+from generate import CrosswordCreator
+
+# Create crossword puzzle
+crossword = Crossword('data/structures/0.txt', 'data/words/words0.txt')
+creator = CrosswordCreator(crossword)
+
+# Solve the puzzle
+assignment = creator.solve()
+
+if assignment:
+    print("Solution found!")
+    creator.print(assignment)
+    # Save to image
+    creator.save(assignment, 'my_crossword.png')
+else:
+    print("No solution found!")
+```
+
+## Input File Formats
+
+### Structure Files (.txt)
+Structure files define the crossword layout using underscores (`_`) for blank cells and spaces for blocked cells:
+
+```
+_____
+_   _
+_   _
+_   _
+_____
+```
+
+### Word Lists (.txt)
+Word lists contain one word per line (all uppercase):
+
+```
+CAT
+DOG
+BAT
+RAT
+HAT
+```
+
+## Image Generation
+
+To generate PNG images of your crosswords, you'll need to:
+
+1. Download the Open Sans font from [Google Fonts](https://fonts.google.com/specimen/Open+Sans)
+2. Place `OpenSans-Regular.ttf` in the `assets/fonts/` directory
+
+If you don't have the font, the program will still work for text output but will skip image generation.
 
 ## Crossword Puzzle Structure
 
@@ -41,30 +151,3 @@ This function returns a single unassigned variable in the crossword puzzle accor
 ### `backtrack(self, assignment)`
 
 This function performs backtracking search to find a complete satisfactory assignment of variables to values. If a satisfying assignment is possible, the function returns the complete assignment as a dictionary, where each variable is a key and the value is the word that the variable should take on. If no satisfying assignment is possible, the function returns None.
-
-## Usage
-
-To use the crossword puzzle generator, you need to have the structure of the crossword puzzle and a list of words as input. Create an instance of the `Crossword` class by providing the structure file and words file. Then, call the `solve()` method to find a satisfying assignment of words to the variables. If a solution is found, the `solution` attribute of the `Crossword` object will contain the final assignment.
-
-```python
-# Example usage
-from crossword import Crossword
-
-# Provide the structure_file and words_file paths
-structure_file = 'path/to/structure_file.txt'
-words_file = 'path/to/words_file.txt'
-
-# Create a crossword puzzle
-crossword = Crossword(structure_file, words_file)
-
-# Solve the crossword puzzle
-crossword.solve()
-
-# Access the solution
-if crossword.solution:
-    print("Solved Crossword Puzzle:")
-    crossword.print()
-else:
-    print("No solution found for the crossword puzzle.")
-
-Note: Replace `'path/to/structure_file.txt'` and `'path/to/words_file.txt'` with the actual paths to the structure file and words file, respectively. The `solve()` method will use the implemented functions to find a satisfying assignment of words to the variables and update the `solution` attribute accordingly. If a solution is found, it will be printed using the `crossword.print()` method. Otherwise, it will indicate that no solution was found for the given crossword puzzle.
